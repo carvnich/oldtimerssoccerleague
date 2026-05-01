@@ -76,28 +76,39 @@
                 <section
                     class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm"
                 >
-                    <div
-                        class="px-4 py-3 border-b border-slate-300 bg-slate-50 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
-                    >
-                        <h2 class="text-base font-bold text-slate-900">
-                            Schedule
-                        </h2>
-                        <USelectMenu
-                            v-model="selectedTeam"
-                            :items="teamOptions"
-                            placeholder="Filter by team"
-                            class="w-full sm:w-56"
-                            clear
-                            :ui="{
-                                base: 'bg-white border border-slate-300 hover:border-slate-400 focus:ring-2 focus:ring-primary-500 text-slate-800',
-                                placeholder: 'text-slate-400',
-                                content:
-                                    'bg-white border border-slate-300 shadow-lg',
-                                item: 'text-slate-700 data-highlighted:not-data-disabled:text-slate-900 data-highlighted:not-data-disabled:before:bg-slate-100',
-                            }"
-                        />
-                    </div>
+                    <UCollapsible default-open>
+                        <template #default="{ open }">
+                            <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
+                                <UButton
+                                    color="neutral"
+                                    variant="ghost"
+                                    block
+                                    class="justify-between w-full px-0 hover:bg-transparent active:bg-transparent"
+                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                    :ui="{ trailingIcon: 'transition-transform duration-200' }"
+                                >
+                                    <h2 class="text-base font-bold text-slate-900">Schedule</h2>
+                                </UButton>
+                            </div>
+                        </template>
 
+                        <template #content>
+                        <div class="px-4 py-3 border-b border-slate-300 bg-slate-50 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                            <USelectMenu
+                                v-model="selectedTeam"
+                                :items="teamOptions"
+                                placeholder="Filter by team"
+                                class="w-full sm:w-56"
+                                clear
+                                :ui="{
+                                    base: 'bg-white border border-slate-300 hover:border-slate-400 focus:ring-2 focus:ring-primary-500 text-slate-800',
+                                    placeholder: 'text-slate-400',
+                                    content:
+                                        'bg-white border border-slate-300 shadow-lg',
+                                    item: 'text-slate-700 data-highlighted:not-data-disabled:text-slate-900 data-highlighted:not-data-disabled:before:bg-slate-100',
+                                }"
+                            />
+                        </div>
                     <!-- Desktop table -->
                     <div class="hidden sm:block">
                         <UTable
@@ -219,6 +230,8 @@
                             </div>
                         </div>
                     </div>
+                    </template>
+                    </UCollapsible>
                 </section>
 
                 <!-- Standings -->
