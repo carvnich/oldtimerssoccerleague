@@ -1,32 +1,33 @@
 <template>
-    <div class="min-h-screen bg-gray-50">
-        <div class="max-w-screen-xl mx-auto px-6 py-8 flex flex-col gap-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-950">
+        <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8">
             <!-- Division toggle -->
             <div class="flex justify-center">
-                <SelectButton
+                <UTabs
                     v-model="store.division"
-                    :options="store.divisionOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    size="large"
-                    @change="selectedTeam = null"
+                    :items="store.divisionOptions"
+                    size="lg"
+                    :content="false"
+                    @update:model-value="selectedTeam = null"
                 />
             </div>
 
             <!-- Season type toggle -->
             <div class="flex justify-center">
-                <SelectButton
+                <UTabs
                     v-model="store.seasonType"
-                    :options="store.seasonOptions"
-                    optionLabel="label"
-                    optionValue="value"
-                    @change="selectedTeam = null"
+                    :items="store.seasonOptions"
+                    :content="false"
+                    @update:model-value="selectedTeam = null"
                 />
             </div>
 
             <!-- Loading -->
             <div v-if="store.pending" class="flex justify-center py-20">
-                <ProgressSpinner />
+                <UIcon
+                    name="i-lucide-loader-circle"
+                    class="size-10 animate-spin text-primary"
+                />
             </div>
 
             <!-- Error -->
@@ -39,93 +40,64 @@
                 <section>
                     <div class="flex items-center justify-between mb-4">
                         <h2 class="text-2xl font-bold">Schedule</h2>
-                        <Select
+                        <USelectMenu
                             v-model="selectedTeam"
-                            :options="teamOptions"
+                            :items="teamOptions"
                             placeholder="Filter by team"
-                            showClear
                             class="w-64"
+                            clear
                         />
                     </div>
-                    <DataTable
-                        :value="filteredSchedule"
-                        sortMode="single"
-                        removableSort
-                        stripedRows
-                        showGridlines
-                        size="small"
+                    <UTable
+                        :data="filteredSchedule"
+                        :columns="scheduleColumns"
+                        class="w-full"
                     >
-                        <Column field="game_date" header="Date" sortable />
-                        <Column field="game_time" header="Time" sortable />
-                        <Column field="field_name" header="Field" sortable>
-                            <template #body="{ data }">
-                                <a
-                                    v-if="getFieldUrl(data.field_name)"
-                                    :href="getFieldUrl(data.field_name)!"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    class="text-orange-600 font-medium hover:text-orange-800"
-                                >
-                                    {{ data.field_name }}
-                                </a>
-                                <span v-else>{{ data.field_name }}</span>
-                            </template>
-                        </Column>
-                        <Column field="home_team" header="Home" sortable />
-                        <Column header="Result">
-                            <template #body="{ data }">
-                                <span v-if="data.home_team_score !== null && data.away_team_score !== null">
-                                    {{ data.home_team_score }} - {{ data.away_team_score }}
-                                </span>
-                                <span v-else class="text-gray-400">Scheduled</span>
-                            </template>
-                        </Column>
-                        <Column field="away_team" header="Away" sortable />
-                    </DataTable>
+                        <template #field_name-cell="{ row }">
+                            <a
+                                v-if="getFieldUrl(row.original.field_name)"
+                                :href="getFieldUrl(row.original.field_name)!"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="text-primary font-medium hover:underline"
+                            >
+                                {{ row.original.field_name }}
+                            </a>
+                            <span v-else>{{ row.original.field_name }}</span>
+                        </template>
+                        <template #result-cell="{ row }">
+                            <span
+                                v-if="
+                                    row.original.home_team_score !== null &&
+                                    row.original.away_team_score !== null
+                                "
+                            >
+                                {{ row.original.home_team_score }} -
+                                {{ row.original.away_team_score }}
+                            </span>
+                            <span v-else class="text-gray-400">Scheduled</span>
+                        </template>
+                    </UTable>
                 </section>
 
                 <!-- Standings -->
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Standings</h2>
-                    <DataTable
-                        :value="store.filteredStandings"
-                        sortMode="single"
-                        removableSort
-                        stripedRows
-                        showGridlines
-                        size="small"
-                    >
-                        <Column field="standing" header="#" style="width: 3rem" />
-                        <Column field="team_name" header="Team" sortable />
-                        <Column field="games_played" header="GP" sortable />
-                        <Column field="wins_total" header="W" sortable />
-                        <Column field="draws_total" header="D" sortable />
-                        <Column field="loses_total" header="L" sortable />
-                        <Column field="goals_for" header="GF" sortable />
-                        <Column field="goals_against" header="GA" sortable />
-                        <Column field="goals_diff" header="GD" sortable />
-                        <Column field="points_total" header="PTS" sortable />
-                    </DataTable>
+                    <UTable
+                        :data="store.filteredStandings"
+                        :columns="standingsColumns"
+                        class="w-full"
+                    />
                 </section>
 
                 <!-- Top Scorers -->
                 <section>
                     <h2 class="text-2xl font-bold mb-4">Top Scorers</h2>
-                    <DataTable
-                        :value="store.filteredScorers"
-                        sortMode="single"
-                        removableSort
-                        stripedRows
-                        showGridlines
-                        size="small"
-                    >
-                        <Column field="standing" header="#" style="width: 3rem" />
-                        <Column field="player_name" header="Player" sortable />
-                        <Column field="team_name" header="Team" sortable />
-                        <Column field="goals" header="Goals" sortable />
-                        <Column field="assists" header="Assists" sortable />
-                        <Column field="games_played" header="GP" sortable />
-                    </DataTable>
+                    <UTable
+                        :data="store.filteredScorers"
+                        :columns="scorersColumns"
+                        class="w-full"
+                    />
                 </section>
             </template>
         </div>
@@ -133,28 +105,61 @@
 </template>
 
 <script setup lang="ts">
-import { useLeagueStore } from '~/stores/league'
-import { useFieldLinks } from '~/composables/useFieldLinks'
+import { useLeagueStore } from "~/stores/league";
+import { useFieldLinks } from "~/composables/useFieldLinks";
 
-const store = useLeagueStore()
-const { getFieldUrl } = useFieldLinks()
+const store = useLeagueStore();
+const { getFieldUrl } = useFieldLinks();
 
-const selectedTeam = ref<string | null>(null)
+const selectedTeam = ref<string | null>(null);
 
 const teamOptions = computed(() => {
-    if (!store.filteredSchedule.length) return []
-    const teams = new Set<string>()
+    if (!store.filteredSchedule.length) return [];
+    const teams = new Set<string>();
     store.filteredSchedule.forEach((g) => {
-        teams.add(g.home_team)
-        teams.add(g.away_team)
-    })
-    return [...teams].sort()
-})
+        teams.add(g.home_team);
+        teams.add(g.away_team);
+    });
+    return [...teams].sort();
+});
 
 const filteredSchedule = computed(() => {
-    if (!selectedTeam.value) return store.filteredSchedule
+    if (!selectedTeam.value) return store.filteredSchedule;
     return store.filteredSchedule.filter(
-        (g) => g.home_team === selectedTeam.value || g.away_team === selectedTeam.value
-    )
-})
+        (g) =>
+            g.home_team === selectedTeam.value ||
+            g.away_team === selectedTeam.value,
+    );
+});
+
+const scheduleColumns = [
+    { accessorKey: "game_date", header: "Date", enableSorting: true },
+    { accessorKey: "game_time", header: "Time", enableSorting: true },
+    { accessorKey: "field_name", header: "Field", enableSorting: true },
+    { accessorKey: "home_team", header: "Home", enableSorting: true },
+    { id: "result", header: "Result" },
+    { accessorKey: "away_team", header: "Away", enableSorting: true },
+];
+
+const standingsColumns = [
+    { accessorKey: "standing", header: "#" },
+    { accessorKey: "team_name", header: "Team", enableSorting: true },
+    { accessorKey: "games_played", header: "GP", enableSorting: true },
+    { accessorKey: "wins_total", header: "W", enableSorting: true },
+    { accessorKey: "draws_total", header: "D", enableSorting: true },
+    { accessorKey: "loses_total", header: "L", enableSorting: true },
+    { accessorKey: "goals_for", header: "GF", enableSorting: true },
+    { accessorKey: "goals_against", header: "GA", enableSorting: true },
+    { accessorKey: "goals_diff", header: "GD", enableSorting: true },
+    { accessorKey: "points_total", header: "PTS", enableSorting: true },
+];
+
+const scorersColumns = [
+    { accessorKey: "standing", header: "#" },
+    { accessorKey: "player_name", header: "Player", enableSorting: true },
+    { accessorKey: "team_name", header: "Team", enableSorting: true },
+    { accessorKey: "goals", header: "Goals", enableSorting: true },
+    { accessorKey: "assists", header: "Assists", enableSorting: true },
+    { accessorKey: "games_played", header: "GP", enableSorting: true },
+];
 </script>
