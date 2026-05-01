@@ -18,6 +18,9 @@ logs
 .fleet
 .idea
 
+# Style reference files
+bootstrap.min.css
+
 # Local env files
 .env
 .env.*
