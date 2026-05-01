@@ -160,43 +160,37 @@
                         >
                             <!-- Summary row -->
                             <button
-                                class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                                class="w-full grid grid-cols-[1fr_auto_auto] items-center gap-3 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
                                 @click="toggleGame(game)"
                             >
-                                <div class="flex-1 min-w-0">
-                                    <p
-                                        class="font-medium text-sm text-slate-900 truncate"
-                                    >
-                                        {{ game.home_team }}
-                                        <span class="text-slate-400 font-normal"
-                                            >vs</span
-                                        >
-                                        {{ game.away_team }}
-                                    </p>
-                                    <p class="text-xs text-slate-500 mt-0.5">
-                                        {{ game.game_date }}
-                                    </p>
+                                <!-- Col 1: Team names + scores stacked -->
+                                <div class="min-w-0">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <p class="font-medium text-sm text-slate-900 leading-tight truncate">{{ game.home_team }}</p>
+                                        <span
+                                            v-if="game.home_team_score !== null"
+                                            class="font-mono font-semibold text-sm text-slate-900 shrink-0"
+                                        >{{ game.home_team_score }}</span>
+                                        <span v-else class="text-xs text-slate-300 shrink-0">—</span>
+                                    </div>
+                                    <div class="flex items-center justify-between gap-2 mt-1">
+                                        <p class="font-medium text-sm text-slate-900 leading-tight truncate">{{ game.away_team }}</p>
+                                        <span
+                                            v-if="game.away_team_score !== null"
+                                            class="font-mono font-semibold text-sm text-slate-900 shrink-0"
+                                        >{{ game.away_team_score }}</span>
+                                        <span v-else class="text-xs text-slate-300 shrink-0">—</span>
+                                    </div>
                                 </div>
-                                <div class="shrink-0 flex items-center gap-2">
-                                    <span
-                                        v-if="
-                                            game.home_team_score !== null &&
-                                            game.away_team_score !== null
-                                        "
-                                        class="font-mono font-semibold text-sm text-slate-900"
-                                    >
-                                        {{ game.home_team_score }} –
-                                        {{ game.away_team_score }}
-                                    </span>
-                                    <span v-else class="text-xs text-slate-400"
-                                        >Upcoming</span
-                                    >
+                                <!-- Col 2: Date and time -->
+                                <div class="shrink-0 text-right">
+                                    <p class="text-xs text-slate-700 font-medium whitespace-nowrap">{{ game.game_date }}</p>
+                                    <p class="text-xs text-slate-500 mt-0.5 whitespace-nowrap">{{ game.game_time }}</p>
+                                </div>
+                                <!-- Col 3: Chevron -->
+                                <div class="shrink-0">
                                     <UIcon
-                                        :name="
-                                            expandedGames.has(gameKey(game))
-                                                ? 'i-lucide-chevron-up'
-                                                : 'i-lucide-chevron-down'
-                                        "
+                                        :name="expandedGames.has(gameKey(game)) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
                                         class="size-4 text-slate-400"
                                     />
                                 </div>
@@ -207,40 +201,19 @@
                                 v-if="expandedGames.has(gameKey(game))"
                                 class="bg-slate-50 border-t border-slate-200"
                             >
-                                <div
-                                    class="flex border-b border-slate-200 last:border-b-0"
-                                >
-                                    <span
-                                        class="w-24 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                                        >Time</span
-                                    >
-                                    <span
-                                        class="px-4 py-2 text-sm text-slate-800"
-                                        >{{ game.game_time }}</span
-                                    >
-                                </div>
-                                <div
-                                    class="flex border-b border-slate-200 last:border-b-0"
-                                >
-                                    <span
-                                        class="w-24 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider"
-                                        >Field</span
-                                    >
+                                <div class="flex border-b border-slate-200 last:border-b-0">
+                                    <span class="w-24 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">Field</span>
                                     <span class="px-4 py-2 text-sm">
                                         <a
                                             v-if="getFieldUrl(game.field_name)"
-                                            :href="
-                                                getFieldUrl(game.field_name)!
-                                            "
+                                            :href="getFieldUrl(game.field_name)!"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             class="text-primary-600 hover:underline"
                                         >
                                             {{ game.field_name }}
                                         </a>
-                                        <span v-else class="text-slate-800">{{
-                                            game.field_name
-                                        }}</span>
+                                        <span v-else class="text-slate-800">{{ game.field_name }}</span>
                                     </span>
                                 </div>
                             </div>
