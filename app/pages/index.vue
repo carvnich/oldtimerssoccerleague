@@ -83,21 +83,17 @@
 
                         <template #content>
                             <div class="px-4 py-3 border-b border-slate-300 bg-slate-50 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
-                                <UDropdownMenu
-                                    :items="dropdownTeamItems"
-                                    :ui="{ content: 'w-56' }"
-                                >
-                                    <UButton
-                                        color="neutral"
-                                        variant="outline"
-                                        trailing-icon="i-lucide-chevron-down"
-                                        class="w-full sm:w-56 justify-between"
-                                    >
-                                        <span :class="selectedTeam ? 'text-slate-800' : 'text-slate-400'">
-                                            {{ selectedTeam ?? 'Filter by team' }}
-                                        </span>
-                                    </UButton>
-                                </UDropdownMenu>
+                                <USelectMenu
+                                    v-model="selectedTeams"
+                                    :items="teamOptions"
+                                    multiple
+                                    size="lg"
+                                    placeholder="Filter by team"
+                                    trailing-icon="i-lucide-chevron-down"
+                                    :ui="{ base: 'w-full sm:w-80', content: 'max-h-96' }"
+                                    :popper="{ placement: 'bottom-end' }"
+                                    class="w-full sm:w-80"
+                                />
                             </div>
 
                             <!-- Date-grouped schedule cards -->
@@ -107,11 +103,15 @@
                                     <!-- Date header -->
                                     <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
                                         <span class="text-sm font-semibold text-slate-700">{{ dateGroup.date }}</span>
-                                        <UIcon v-if="store.seasonType === 'all' && dateGroup.games.some(g => g.schedule_type === 'Spence Cup')" name="i-lucide-trophy" class="size-3.5 text-amber-500" />
+                                        <UIcon
+                                            v-if="store.seasonType === 'all' && dateGroup.games.some((g) => g.schedule_type === 'Spence Cup')"
+                                            name="i-lucide-trophy"
+                                            class="size-3.5 text-amber-500"
+                                        />
                                     </div>
                                     <!-- Games for this date -->
                                     <div class="divide-y divide-slate-100">
-                                        <div v-for="game in dateGroup.games" :key="gameKey(game)" class="grid grid-cols-3 items-center px-4 py-3">
+                                        <div v-for="game in dateGroup.games" :key="gameKey(game)" class="grid grid-cols-3 items-center p-4 gap-3">
                                             <!-- Home team -->
                                             <span class="text-xs font-medium text-slate-900 text-right leading-tight">{{ game.home_team }}</span>
                                             <!-- Center: score (completed) or time + location (scheduled) -->
@@ -365,7 +365,7 @@ import type { Game, Standing, Scorer } from "~/types/league";
 const store = useLeagueStore();
 const { getFieldUrl } = useFieldLinks();
 
-const selectedTeam = ref<string | null>(null);
+const selectedTeams = ref<string[]>([]);
 
 const expandedStandings = ref<Set<string>>(new Set());
 const expandedScorers = ref<Set<string>>(new Set());
@@ -394,17 +394,9 @@ const teamOptions = computed(() => {
     return [...teams].sort();
 });
 
-const dropdownTeamItems = computed(() => [
-    ...(selectedTeam.value ? [{ label: "Clear filter", icon: "i-lucide-x", onSelect: () => { selectedTeam.value = null; } }] : []),
-    ...teamOptions.value.map((team) => ({
-        label: team,
-        onSelect: () => { selectedTeam.value = team; },
-    })),
-]);
-
 const filteredSchedule = computed(() => {
-    if (!selectedTeam.value) return store.filteredSchedule;
-    return store.filteredSchedule.filter((g) => g.home_team === selectedTeam.value || g.away_team === selectedTeam.value);
+    if (!selectedTeams.value.length) return store.filteredSchedule;
+    return store.filteredSchedule.filter((g) => selectedTeams.value.includes(g.home_team) || selectedTeams.value.includes(g.away_team));
 });
 
 const scheduleByDate = computed(() => {
