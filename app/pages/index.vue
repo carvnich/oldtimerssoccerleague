@@ -25,7 +25,7 @@
                     "
                     @click="
                         store.division = option.value;
-                        selectedTeam = null;
+                        selectedTeam = undefined;
                     "
                 >
                     {{ option.label }}
@@ -45,7 +45,7 @@
                     "
                     @click="
                         store.seasonType = option.value;
-                        selectedTeam = null;
+                        selectedTeam = undefined;
                     "
                 >
                     {{ option.label }}
@@ -82,18 +82,17 @@
                         </template>
 
                         <template #content>
-                            <div class="px-4 py-3 border-b border-slate-300 bg-slate-50 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end">
+                            <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
                                 <USelectMenu
-                                    v-model="selectedTeams"
+                                    v-model="selectedTeam"
                                     :items="teamOptions"
-                                    multiple
                                     :search-input="false"
-                                    size="lg"
                                     placeholder="Filter by team"
+                                    size="lg"
                                     trailing-icon="i-lucide-chevron-down"
-                                    :ui="{ base: 'w-full sm:w-80', content: 'max-h-96' }"
-                                    :popper="{ placement: 'bottom-end' }"
-                                    class="w-full sm:w-80"
+                                    :content="{ side: 'bottom', sideOffset: 4, avoidCollisions: false }"
+                                    :ui="{ content: 'max-h-96' }"
+                                    class="w-full"
                                 />
                             </div>
 
@@ -366,7 +365,7 @@ import type { Game, Standing, Scorer } from "~/types/league";
 const store = useLeagueStore();
 const { getFieldUrl } = useFieldLinks();
 
-const selectedTeams = ref<string[]>([]);
+const selectedTeam = ref<string | undefined>(undefined);
 
 const expandedStandings = ref<Set<string>>(new Set());
 const expandedScorers = ref<Set<string>>(new Set());
@@ -395,9 +394,10 @@ const teamOptions = computed(() => {
     return [...teams].sort();
 });
 
+
 const filteredSchedule = computed(() => {
-    if (!selectedTeams.value.length) return store.filteredSchedule;
-    return store.filteredSchedule.filter((g) => selectedTeams.value.includes(g.home_team) || selectedTeams.value.includes(g.away_team));
+    if (!selectedTeam.value) return store.filteredSchedule;
+    return store.filteredSchedule.filter((g) => g.home_team === selectedTeam.value || g.away_team === selectedTeam.value);
 });
 
 const scheduleByDate = computed(() => {
