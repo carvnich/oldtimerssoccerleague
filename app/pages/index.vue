@@ -87,6 +87,7 @@
                                     v-model="selectedTeams"
                                     :items="teamOptions"
                                     multiple
+                                    :search-input="false"
                                     size="lg"
                                     placeholder="Filter by team"
                                     trailing-icon="i-lucide-chevron-down"
