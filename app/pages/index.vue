@@ -3,7 +3,9 @@
         <!-- Header -->
         <header class="bg-white border-b border-slate-300 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
-                <div class="size-9 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-xs shrink-0">OTSL</div>
+                <div
+                    class="size-9 rounded-full bg-primary-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                    OTSL</div>
                 <div>
                     <h1 class="text-lg font-bold leading-tight text-slate-900">Oldtimers Soccer League</h1>
                     <p class="text-xs text-slate-500">2026 Season</p>
@@ -14,40 +16,28 @@
         <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-6">
             <!-- Division toggle -->
             <div class="flex flex-wrap justify-center gap-2">
-                <button
-                    v-for="option in store.divisionOptions"
-                    :key="option.value"
-                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
-                    :class="
-                        store.division === option.value
-                            ? 'bg-primary-500 border-primary-500 text-white shadow-sm'
-                            : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
-                    "
-                    @click="
-                        store.division = option.value;
+                <button v-for="option in store.divisionOptions" :key="option.value"
+                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors" :class="store.division === option.value
+                        ? 'bg-primary-500 border-primary-500 text-white shadow-sm'
+                        : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
+                        " @click="
+                            store.division = option.value;
                         selectedTeam = undefined;
-                    "
-                >
+                        ">
                     {{ option.label }}
                 </button>
             </div>
 
             <!-- Season type toggle -->
             <div class="flex flex-wrap justify-center gap-2">
-                <button
-                    v-for="option in store.seasonOptions"
-                    :key="option.value"
-                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors"
-                    :class="
-                        store.seasonType === option.value
-                            ? 'bg-primary-500 border-primary-500 text-white shadow-sm'
-                            : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
-                    "
-                    @click="
-                        store.seasonType = option.value;
+                <button v-for="option in store.seasonOptions" :key="option.value"
+                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors" :class="store.seasonType === option.value
+                        ? 'bg-primary-500 border-primary-500 text-white shadow-sm'
+                        : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
+                        " @click="
+                            store.seasonType = option.value;
                         selectedTeam = undefined;
-                    "
-                >
+                        ">
                     {{ option.label }}
                 </button>
             </div>
@@ -58,7 +48,8 @@
             </div>
 
             <!-- Error -->
-            <div v-else-if="store.error" class="text-red-500 text-center py-10">Failed to load data. Please try again later.</div>
+            <div v-else-if="store.error" class="text-red-500 text-center py-10">Failed to load data. Please try again
+                later.</div>
 
             <template v-else>
                 <!-- Schedule -->
@@ -66,16 +57,11 @@
                     <UCollapsible default-open>
                         <template #default="{ open }">
                             <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                                <UButton
-                                    color="neutral"
-                                    variant="ghost"
-                                    block
+                                <UButton color="neutral" variant="ghost" block
                                     class="justify-between w-full px-0 hover:bg-transparent active:bg-transparent"
-                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                    :ui="{
+                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" :ui="{
                                         trailingIcon: 'transition-transform duration-200',
-                                    }"
-                                >
+                                    }">
                                     <h2 class="text-base font-bold text-slate-900">Schedule</h2>
                                 </UButton>
                             </div>
@@ -83,57 +69,54 @@
 
                         <template #content>
                             <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                                <USelectMenu
-                                    v-model="selectedTeam"
-                                    :items="teamOptions"
-                                    :search-input="false"
-                                    placeholder="Filter by team"
-                                    size="lg"
-                                    trailing-icon="i-lucide-chevron-down"
+                                <USelectMenu v-model="selectedTeam" :items="teamOptions" :search-input="false"
+                                    placeholder="Filter by team" size="lg" clear trailing-icon="i-lucide-chevron-down"
                                     :content="{ side: 'bottom', sideOffset: 4, avoidCollisions: false }"
-                                    :ui="{ content: 'max-h-96' }"
-                                    class="w-full"
-                                />
+                                    :ui="{ content: 'max-h-80' }" class="w-full" />
                             </div>
 
                             <!-- Date-grouped schedule cards -->
                             <div class="p-4 flex flex-col gap-4">
-                                <div v-if="scheduleByDate.length === 0" class="py-6 text-center text-sm text-slate-500">No games found.</div>
-                                <div v-for="dateGroup in scheduleByDate" :key="dateGroup.date" class="rounded-lg border border-slate-200 overflow-hidden">
+                                <div v-if="scheduleByDate.length === 0" class="py-6 text-center text-sm text-slate-500">
+                                    No games found.</div>
+                                <div v-for="dateGroup in scheduleByDate" :key="dateGroup.date"
+                                    class="rounded-lg border border-slate-200 overflow-hidden">
                                     <!-- Date header -->
-                                    <div class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                                    <div
+                                        class="px-4 py-2 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
                                         <span class="text-sm font-semibold text-slate-700">{{ dateGroup.date }}</span>
-                                        <UIcon
-                                            v-if="store.seasonType === 'all' && dateGroup.games.some((g) => g.schedule_type === 'Spence Cup')"
-                                            name="i-lucide-trophy"
-                                            class="size-3.5 text-amber-500"
-                                        />
+                                        <UIcon v-if="dateGroup.games.some((g) => g.schedule_type === 'Spence Cup')"
+                                            name="i-lucide-trophy" class="size-3.5 text-amber-500" />
                                     </div>
                                     <!-- Games for this date -->
                                     <div class="divide-y divide-slate-100">
-                                        <div v-for="game in dateGroup.games" :key="gameKey(game)" class="grid grid-cols-3 items-center p-4 gap-3">
+                                        <div v-for="game in dateGroup.games" :key="gameKey(game)"
+                                            class="grid grid-cols-3 items-center p-4 gap-3">
                                             <!-- Home team -->
-                                            <span class="text-xs font-medium text-slate-900 text-right leading-tight">{{ game.home_team }}</span>
+                                            <span class="text-xs font-medium text-slate-900 text-right leading-tight">{{
+                                                game.home_team }}</span>
                                             <!-- Center: score (completed) or time + location (scheduled) -->
                                             <div class="shrink-0 text-center min-w-[80px]">
-                                                <template v-if="game.home_team_score !== null && game.away_team_score !== null">
-                                                    <span class="font-mono font-bold text-base text-slate-900">{{ game.home_team_score }} – {{ game.away_team_score }}</span>
+                                                <template
+                                                    v-if="game.home_team_score !== null && game.away_team_score !== null">
+                                                    <span class="font-mono font-bold text-base text-slate-900">{{
+                                                        game.home_team_score }} – {{ game.away_team_score }}</span>
                                                 </template>
                                                 <template v-else>
-                                                    <div class="text-sm font-medium text-slate-700">{{ game.game_time }}</div>
-                                                    <a
-                                                        v-if="getFieldUrl(game.field_name)"
-                                                        :href="getFieldUrl(game.field_name)!"
-                                                        target="_blank"
+                                                    <div class="text-sm font-medium text-slate-700">{{ game.game_time }}
+                                                    </div>
+                                                    <a v-if="getFieldUrl(game.field_name)"
+                                                        :href="getFieldUrl(game.field_name)!" target="_blank"
                                                         rel="noopener noreferrer"
-                                                        class="text-xs text-primary-600 hover:underline leading-tight"
-                                                        >{{ game.field_name }}</a
-                                                    >
-                                                    <div v-else class="text-xs text-slate-400 leading-tight">{{ game.field_name }}</div>
+                                                        class="text-xs text-primary-600 hover:underline leading-tight">{{
+                                                            game.field_name }}</a>
+                                                    <div v-else class="text-xs text-slate-400 leading-tight">{{
+                                                        game.field_name }}</div>
                                                 </template>
                                             </div>
                                             <!-- Away team -->
-                                            <span class="text-xs font-medium text-slate-900 leading-tight">{{ game.away_team }}</span>
+                                            <span class="text-xs font-medium text-slate-900 leading-tight">{{
+                                                game.away_team }}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -147,16 +130,11 @@
                     <UCollapsible default-open>
                         <template #default="{ open }">
                             <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                                <UButton
-                                    color="neutral"
-                                    variant="ghost"
-                                    block
+                                <UButton color="neutral" variant="ghost" block
                                     class="justify-between w-full px-0 hover:bg-transparent active:bg-transparent"
-                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                    :ui="{
+                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" :ui="{
                                         trailingIcon: 'transition-transform duration-200',
-                                    }"
-                                >
+                                    }">
                                     <h2 class="text-base font-bold text-slate-900">Standings</h2>
                                 </UButton>
                             </div>
@@ -165,27 +143,27 @@
                         <template #content>
                             <!-- Desktop table -->
                             <div class="hidden sm:block">
-                                <UTable
-                                    :data="store.filteredStandings"
-                                    :columns="standingsColumns"
-                                    class="w-full"
-                                    :ui="{
-                                        thead: 'bg-slate-50',
-                                        th: 'px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider border-b border-slate-300',
-                                        td: 'px-4 py-3 text-sm text-slate-700 border-b border-slate-200',
-                                        tbody: '[&>tr]:hover:bg-slate-50 divide-y divide-slate-200',
-                                    }"
-                                />
+                                <UTable :data="store.filteredStandings" :columns="standingsColumns" class="w-full" :ui="{
+                                    thead: 'bg-slate-50',
+                                    th: 'px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider border-b border-slate-300',
+                                    td: 'px-4 py-3 text-sm text-slate-700 border-b border-slate-200',
+                                    tbody: '[&>tr]:hover:bg-slate-50 divide-y divide-slate-200',
+                                }" />
                             </div>
 
                             <!-- Mobile expandable rows -->
                             <div class="sm:hidden">
-                                <div v-if="store.filteredStandings.length === 0" class="px-4 py-6 text-center text-sm text-slate-500">No standings available.</div>
-                                <div v-for="team in store.filteredStandings" :key="team.team_name" class="border-b border-slate-200 last:border-b-0">
+                                <div v-if="store.filteredStandings.length === 0"
+                                    class="px-4 py-6 text-center text-sm text-slate-500">No standings available.</div>
+                                <div v-for="team in store.filteredStandings" :key="team.team_name"
+                                    class="border-b border-slate-200 last:border-b-0">
                                     <!-- Summary row -->
-                                    <button class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors" @click="toggleStanding(team)">
+                                    <button
+                                        class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                                        @click="toggleStanding(team)">
                                         <div class="flex items-center gap-3">
-                                            <span class="text-xs font-bold w-5 text-center text-slate-400">{{ team.standing }}</span>
+                                            <span class="text-xs font-bold w-5 text-center text-slate-400">{{
+                                                team.standing }}</span>
                                             <p class="font-medium text-sm text-slate-900">
                                                 {{ team.team_name }}
                                             </p>
@@ -193,37 +171,37 @@
                                         <div class="flex items-center gap-3">
                                             <span class="text-sm text-gray-900">
                                                 {{ team.points_total }}
-                                                <span class="font-normal text-xs text-slate-400">PTS</span></span
-                                            >
-                                            <UIcon :name="expandedStandings.has(team.team_name) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="size-4 text-slate-400" />
+                                                <span class="font-normal text-xs text-slate-400">PTS</span></span>
+                                            <UIcon
+                                                :name="expandedStandings.has(team.team_name) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                                class="size-4 text-slate-400" />
                                         </div>
                                     </button>
 
                                     <!-- Expanded detail grid -->
-                                    <div v-if="expandedStandings.has(team.team_name)" class="bg-slate-50 border-t border-slate-200 px-4 py-3 space-y-3">
+                                    <div v-if="expandedStandings.has(team.team_name)"
+                                        class="bg-slate-50 border-t border-slate-200 px-4 py-3 space-y-3">
                                         <div class="grid grid-cols-4 text-center gap-y-1">
-                                            <div
-                                                v-for="stat in [
-                                                    {
-                                                        label: 'GP',
-                                                        value: team.games_played,
-                                                    },
-                                                    {
-                                                        label: 'W',
-                                                        value: team.wins_total,
-                                                    },
-                                                    {
-                                                        label: 'D',
-                                                        value: team.draws_total,
-                                                    },
-                                                    {
-                                                        label: 'L',
-                                                        value: team.loses_total,
-                                                    },
-                                                ]"
-                                                :key="stat.label"
-                                            >
-                                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                            <div v-for="stat in [
+                                                {
+                                                    label: 'GP',
+                                                    value: team.games_played,
+                                                },
+                                                {
+                                                    label: 'W',
+                                                    value: team.wins_total,
+                                                },
+                                                {
+                                                    label: 'D',
+                                                    value: team.draws_total,
+                                                },
+                                                {
+                                                    label: 'L',
+                                                    value: team.loses_total,
+                                                },
+                                            ]" :key="stat.label">
+                                                <div
+                                                    class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                                     {{ stat.label }}
                                                 </div>
                                                 <div class="text-sm font-medium text-slate-800 mt-0.5">
@@ -231,25 +209,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="grid grid-cols-3 text-center gap-y-1 border-t border-slate-200 pt-3">
-                                            <div
-                                                v-for="stat in [
-                                                    {
-                                                        label: 'GF',
-                                                        value: team.goals_for,
-                                                    },
-                                                    {
-                                                        label: 'GA',
-                                                        value: team.goals_against,
-                                                    },
-                                                    {
-                                                        label: 'GD',
-                                                        value: team.goals_diff,
-                                                    },
-                                                ]"
-                                                :key="stat.label"
-                                            >
-                                                <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                                        <div
+                                            class="grid grid-cols-3 text-center gap-y-1 border-t border-slate-200 pt-3">
+                                            <div v-for="stat in [
+                                                {
+                                                    label: 'GF',
+                                                    value: team.goals_for,
+                                                },
+                                                {
+                                                    label: 'GA',
+                                                    value: team.goals_against,
+                                                },
+                                                {
+                                                    label: 'GD',
+                                                    value: team.goals_diff,
+                                                },
+                                            ]" :key="stat.label">
+                                                <div
+                                                    class="text-xs font-semibold text-slate-500 uppercase tracking-wider">
                                                     {{ stat.label }}
                                                 </div>
                                                 <div class="text-sm font-medium text-slate-800 mt-0.5">
@@ -269,16 +246,11 @@
                     <UCollapsible default-open>
                         <template #default="{ open }">
                             <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                                <UButton
-                                    color="neutral"
-                                    variant="ghost"
-                                    block
+                                <UButton color="neutral" variant="ghost" block
                                     class="justify-between w-full px-0 hover:bg-transparent active:bg-transparent"
-                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                    :ui="{
+                                    :trailing-icon="open ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" :ui="{
                                         trailingIcon: 'transition-transform duration-200',
-                                    }"
-                                >
+                                    }">
                                     <h2 class="text-base font-bold text-slate-900">Top Scorers</h2>
                                 </UButton>
                             </div>
@@ -287,27 +259,27 @@
                         <template #content>
                             <!-- Desktop table -->
                             <div class="hidden sm:block">
-                                <UTable
-                                    :data="store.filteredScorers"
-                                    :columns="scorersColumns"
-                                    class="w-full"
-                                    :ui="{
-                                        thead: 'bg-slate-50',
-                                        th: 'px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider border-b border-slate-300',
-                                        td: 'px-4 py-3 text-sm text-slate-700 border-b border-slate-200',
-                                        tbody: '[&>tr]:hover:bg-slate-50 divide-y divide-slate-200',
-                                    }"
-                                />
+                                <UTable :data="store.filteredScorers" :columns="scorersColumns" class="w-full" :ui="{
+                                    thead: 'bg-slate-50',
+                                    th: 'px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider border-b border-slate-300',
+                                    td: 'px-4 py-3 text-sm text-slate-700 border-b border-slate-200',
+                                    tbody: '[&>tr]:hover:bg-slate-50 divide-y divide-slate-200',
+                                }" />
                             </div>
 
                             <!-- Mobile expandable rows -->
                             <div class="sm:hidden">
-                                <div v-if="store.filteredScorers.length === 0" class="px-4 py-6 text-center text-sm text-slate-500">No scorer data available.</div>
-                                <div v-for="scorer in store.filteredScorers" :key="scorer.player_name" class="border-b border-slate-200 last:border-b-0">
+                                <div v-if="store.filteredScorers.length === 0"
+                                    class="px-4 py-6 text-center text-sm text-slate-500">No scorer data available.</div>
+                                <div v-for="scorer in store.filteredScorers" :key="scorer.player_name"
+                                    class="border-b border-slate-200 last:border-b-0">
                                     <!-- Summary row -->
-                                    <button class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors" @click="toggleScorer(scorer)">
+                                    <button
+                                        class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
+                                        @click="toggleScorer(scorer)">
                                         <div class="flex items-center gap-3">
-                                            <span class="text-xs font-bold w-5 text-center text-slate-400">{{ scorer.standing }}</span>
+                                            <span class="text-xs font-bold w-5 text-center text-slate-400">{{
+                                                scorer.standing }}</span>
                                             <div>
                                                 <p class="font-medium text-sm text-slate-900">
                                                     {{ scorer.player_name }}
@@ -318,32 +290,34 @@
                                             </div>
                                         </div>
                                         <div class="flex items-center gap-3">
-                                            <span class="text-sm font-bold text-primary-600">{{ scorer.goals }} <span class="font-normal text-xs text-slate-400">G</span></span>
-                                            <UIcon :name="expandedScorers.has(scorer.player_name) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'" class="size-4 text-slate-400" />
+                                            <span class="text-sm font-bold text-primary-600">{{ scorer.goals }} <span
+                                                    class="font-normal text-xs text-slate-400">G</span></span>
+                                            <UIcon
+                                                :name="expandedScorers.has(scorer.player_name) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
+                                                class="size-4 text-slate-400" />
                                         </div>
                                     </button>
 
                                     <!-- Expanded detail rows -->
-                                    <div v-if="expandedScorers.has(scorer.player_name)" class="bg-slate-50 border-t border-slate-200">
-                                        <div
-                                            v-for="stat in [
-                                                {
-                                                    label: 'Goals',
-                                                    value: scorer.goals,
-                                                },
-                                                {
-                                                    label: 'Assists',
-                                                    value: scorer.assists,
-                                                },
-                                                {
-                                                    label: 'Games Played',
-                                                    value: scorer.games_played,
-                                                },
-                                            ]"
-                                            :key="stat.label"
-                                            class="flex border-b border-slate-200 last:border-b-0"
-                                        >
-                                            <span class="w-36 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">{{ stat.label }}</span>
+                                    <div v-if="expandedScorers.has(scorer.player_name)"
+                                        class="bg-slate-50 border-t border-slate-200">
+                                        <div v-for="stat in [
+                                            {
+                                                label: 'Goals',
+                                                value: scorer.goals,
+                                            },
+                                            {
+                                                label: 'Assists',
+                                                value: scorer.assists,
+                                            },
+                                            {
+                                                label: 'Games Played',
+                                                value: scorer.games_played,
+                                            },
+                                        ]" :key="stat.label" class="flex border-b border-slate-200 last:border-b-0">
+                                            <span
+                                                class="w-36 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">{{
+                                                    stat.label }}</span>
                                             <span class="px-4 py-2 text-sm text-slate-800">{{ stat.value }}</span>
                                         </div>
                                     </div>
@@ -406,7 +380,10 @@ const scheduleByDate = computed(() => {
         if (!groups.has(game.game_date)) groups.set(game.game_date, []);
         groups.get(game.game_date)!.push(game);
     }
-    return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, games]) => ({ date, games }));
+    return [...groups.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, games]) => ({
+        date,
+        games: [...games].sort((a, b) => (a.game_time ?? '').localeCompare(b.game_time ?? '')),
+    }));
 });
 
 const standingsColumns = [

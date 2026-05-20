@@ -57,11 +57,7 @@ export const useLeagueStore = defineStore("league", () => {
     if (seasonType.value === "all") {
       const divisionDivId = `${division.value} DIVISION`;
       const cupDivId = CUP_DIVISION_MAP[division.value];
-      return scheduleData.value.filter(
-        (g) =>
-          (g.division_id === divisionDivId && (g.schedule_type === "Regular" || g.schedule_type === "Playoff")) ||
-          (g.division_id === cupDivId && g.schedule_type === "Spence Cup"),
-      );
+      return scheduleData.value.filter((g) => (g.division_id === divisionDivId && (g.schedule_type === "Regular" || g.schedule_type === "Playoff")) || (g.division_id === cupDivId && g.schedule_type === "Spence Cup"));
     }
     return scheduleData.value.filter((g) => g.division_id === scheduleDivisionId.value && g.schedule_type === scheduleType.value);
   });
