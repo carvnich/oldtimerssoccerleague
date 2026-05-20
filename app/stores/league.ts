@@ -16,6 +16,7 @@ const CUP_DIVISION_MAP: Record<string, string> = {
 export const useLeagueStore = defineStore("league", () => {
   const division = useCookie("otsl-division", { default: () => "A", maxAge: 60 * 60 * 24 * 365 });
   const seasonType = useCookie("otsl-season-type", { default: () => "regular", maxAge: 60 * 60 * 24 * 365 });
+  const selectedTeam = useCookie<string | undefined>("otsl-selected-team", { default: () => undefined, maxAge: 60 * 60 * 24 * 365 });
 
   const divisionOptions = [
     { label: "Division A", value: "A" },
@@ -75,6 +76,7 @@ export const useLeagueStore = defineStore("league", () => {
   return {
     division,
     seasonType,
+    selectedTeam,
     divisionOptions,
     seasonOptions,
     pending,

@@ -22,7 +22,7 @@
                         : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
                         " @click="
                             store.division = option.value;
-                        selectedTeam = undefined;
+                        store.selectedTeam = undefined;
                         ">
                     {{ option.label }}
                 </button>
@@ -36,7 +36,7 @@
                         : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'
                         " @click="
                             store.seasonType = option.value;
-                        selectedTeam = undefined;
+                        store.selectedTeam = undefined;
                         ">
                     {{ option.label }}
                 </button>
@@ -72,7 +72,7 @@
                                 <USelectMenu v-model="selectedTeam" :items="teamOptions" :search-input="false"
                                     placeholder="Filter by team" size="lg" clear trailing-icon="i-lucide-chevron-down"
                                     :content="{ side: 'bottom', sideOffset: 4, avoidCollisions: false }"
-                                    :ui="{ content: 'max-h-80' }" class="w-full" />
+                                    :ui="{ content: 'max-h-64' }" class="w-full" />
                             </div>
 
                             <!-- Date-grouped schedule cards -->
@@ -339,7 +339,10 @@ import type { Game, Standing, Scorer } from "~/types/league";
 const store = useLeagueStore();
 const { getFieldUrl } = useFieldLinks();
 
-const selectedTeam = ref<string | undefined>(undefined);
+const selectedTeam = computed({
+    get: () => store.selectedTeam ?? undefined,
+    set: (v) => { store.selectedTeam = v; },
+});
 
 const expandedStandings = ref<Set<string>>(new Set());
 const expandedScorers = ref<Set<string>>(new Set());
