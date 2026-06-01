@@ -70,6 +70,17 @@ export const useLeagueStore = defineStore("league", () => {
 
   const filteredScorers = computed(() => {
     if (!scorersData.value) return [];
+    if (seasonType.value === "cup") {
+      return scorersData.value.filter((s) => s.division_id === CUP_DIVISION_MAP[division.value]);
+    }
+    if (seasonType.value === "all") {
+      const divisionDivId = `${division.value} DIVISION`;
+      const cupDivId = CUP_DIVISION_MAP[division.value];
+      return scorersData.value.filter((s) =>
+        (s.division_id === divisionDivId && s.schedule_type === "Regular") ||
+        (s.division_id === cupDivId && s.schedule_type === "Spence Cup")
+      );
+    }
     return scorersData.value.filter((s) => s.division_id === `${division.value} DIVISION`);
   });
 

@@ -257,72 +257,22 @@
                         </template>
 
                         <template #content>
-                            <!-- Desktop table -->
-                            <div class="hidden sm:block">
-                                <UTable :data="store.filteredScorers" :columns="scorersColumns" class="w-full" :ui="{
-                                    thead: 'bg-slate-50',
-                                    th: 'px-4 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider border-b border-slate-300',
-                                    td: 'px-4 py-3 text-sm text-slate-700 border-b border-slate-200',
-                                    tbody: '[&>tr]:hover:bg-slate-50 divide-y divide-slate-200',
-                                }" />
-                            </div>
-
-                            <!-- Mobile expandable rows -->
-                            <div class="sm:hidden">
-                                <div v-if="store.filteredScorers.length === 0"
-                                    class="px-4 py-6 text-center text-sm text-slate-500">No scorer data available.</div>
-                                <div v-for="scorer in store.filteredScorers" :key="scorer.player_name"
-                                    class="border-b border-slate-200 last:border-b-0">
-                                    <!-- Summary row -->
-                                    <button
-                                        class="w-full flex items-center justify-between gap-2 px-4 py-3 text-left hover:bg-slate-50 transition-colors"
-                                        @click="toggleScorer(scorer)">
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-xs font-bold w-5 text-center text-slate-400">{{
-                                                scorer.standing }}</span>
-                                            <div>
-                                                <p class="font-medium text-sm text-slate-900">
-                                                    {{ scorer.player_name }}
-                                                </p>
-                                                <p class="text-xs text-slate-500">
-                                                    {{ scorer.team_name }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-sm font-bold text-primary-600">{{ scorer.goals }} <span
-                                                    class="font-normal text-xs text-slate-400">G</span></span>
-                                            <UIcon
-                                                :name="expandedScorers.has(scorer.player_name) ? 'i-lucide-chevron-up' : 'i-lucide-chevron-down'"
-                                                class="size-4 text-slate-400" />
-                                        </div>
-                                    </button>
-
-                                    <!-- Expanded detail rows -->
-                                    <div v-if="expandedScorers.has(scorer.player_name)"
-                                        class="bg-slate-50 border-t border-slate-200">
-                                        <div v-for="stat in [
-                                            {
-                                                label: 'Goals',
-                                                value: scorer.goals,
-                                            },
-                                            {
-                                                label: 'Assists',
-                                                value: scorer.assists,
-                                            },
-                                            {
-                                                label: 'Games Played',
-                                                value: scorer.games_played,
-                                            },
-                                        ]" :key="stat.label" class="flex border-b border-slate-200 last:border-b-0">
-                                            <span
-                                                class="w-36 shrink-0 px-4 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider">{{
-                                                    stat.label }}</span>
-                                            <span class="px-4 py-2 text-sm text-slate-800">{{ stat.value }}</span>
-                                        </div>
+                            <div v-if="store.filteredScorers.length === 0"
+                                class="px-4 py-6 text-center text-sm text-slate-500">No scorer data available.</div>
+                            <template v-for="divGroup in scorersByDivision" :key="divGroup.division_id">
+                                <div v-if="scorersByDivision.length > 1"
+                                    class="px-4 py-2 bg-slate-100 border-b border-slate-200">
+                                    <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">{{ divGroup.division_name }}</span>
+                                </div>
+                                <div class="divide-y divide-slate-100 border-b border-slate-200 last:border-b-0">
+                                    <div v-for="scorer in divGroup.scorers" :key="scorer.player_id"
+                                        class="grid grid-cols-3 items-center px-4 py-2 gap-3">
+                                        <span class="text-sm text-slate-900">{{ scorer.player_fname }} {{ scorer.player_lname }}</span>
+                                        <span class="text-sm font-bold text-primary-600 text-center">{{ scorer.tot_goals }}</span>
+                                        <span class="text-xs text-slate-500 text-right leading-tight">{{ scorer.team_name }}</span>
                                     </div>
                                 </div>
-                            </div>
+                            </template>
                         </template>
                     </UCollapsible>
                 </section>
@@ -334,7 +284,7 @@
 <script setup lang="ts">
 import { useLeagueStore } from "~/stores/league";
 import { useFieldLinks } from "~/composables/useFieldLinks";
-import type { Game, Standing, Scorer } from "~/types/league";
+import type { Game, Standing } from "~/types/league";
 
 const store = useLeagueStore();
 const { getFieldUrl } = useFieldLinks();
@@ -345,29 +295,22 @@ const selectedTeam = computed({
 });
 
 const expandedStandings = ref<Set<string>>(new Set());
-const expandedScorers = ref<Set<string>>(new Set());
 
 function gameKey(game: Game): string {
     return `${game.game_date}-${game.home_team}-${game.away_team}`;
 }
 
 function toggleStanding(team: Standing) {
-    expandedStandings.value = new Set(expandedStandings.value.has(team.team_name) ? [...expandedStandings.value].filter((k) => k !== team.team_name) : [...expandedStandings.value, team.team_name]);
-}
-
-function toggleScorer(scorer: Scorer) {
-    expandedScorers.value = new Set(
-        expandedScorers.value.has(scorer.player_name) ? [...expandedScorers.value].filter((k) => k !== scorer.player_name) : [...expandedScorers.value, scorer.player_name],
-    );
+    if (expandedStandings.value.has(team.team_name)) {
+        expandedStandings.value.delete(team.team_name);
+    } else {
+        expandedStandings.value.add(team.team_name);
+    }
+    expandedStandings.value = new Set(expandedStandings.value);
 }
 
 const teamOptions = computed(() => {
-    if (!store.filteredSchedule.length) return [];
-    const teams = new Set<string>();
-    store.filteredSchedule.forEach((g) => {
-        teams.add(g.home_team);
-        teams.add(g.away_team);
-    });
+    const teams = new Set(store.filteredSchedule.flatMap((g) => [g.home_team, g.away_team]));
     return [...teams].sort();
 });
 
@@ -389,6 +332,17 @@ const scheduleByDate = computed(() => {
     }));
 });
 
+const scorersByDivision = computed(() => {
+    const groups = new Map<string, { division_id: string; division_name: string; scorers: typeof store.filteredScorers }>();
+    for (const scorer of store.filteredScorers) {
+        if (!groups.has(scorer.division_id)) {
+            groups.set(scorer.division_id, { division_id: scorer.division_id, division_name: scorer.division_name, scorers: [] });
+        }
+        groups.get(scorer.division_id)!.scorers.push(scorer);
+    }
+    return [...groups.values()];
+});
+
 const standingsColumns = [
     { accessorKey: "standing", header: "#" },
     { accessorKey: "team_name", header: "Team", enableSorting: true },
@@ -402,12 +356,4 @@ const standingsColumns = [
     { accessorKey: "points_total", header: "PTS", enableSorting: true },
 ];
 
-const scorersColumns = [
-    { accessorKey: "standing", header: "#" },
-    { accessorKey: "player_name", header: "Player", enableSorting: true },
-    { accessorKey: "team_name", header: "Team", enableSorting: true },
-    { accessorKey: "goals", header: "Goals", enableSorting: true },
-    { accessorKey: "assists", header: "Assists", enableSorting: true },
-    { accessorKey: "games_played", header: "GP", enableSorting: true },
-];
 </script>

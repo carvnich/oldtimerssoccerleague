@@ -32,11 +32,14 @@ export interface Standing {
 }
 
 export interface Scorer {
+  season_year: string;
+  schedule_type: string;
   division_id: string;
-  standing: string;
-  player_name: string;
+  division_name: string;
+  team_id: string;
   team_name: string;
-  goals: string;
-  assists: string;
-  games_played: string;
+  player_id: string;
+  player_lname: string;
+  player_fname: string;
+  tot_goals: string;
 }
