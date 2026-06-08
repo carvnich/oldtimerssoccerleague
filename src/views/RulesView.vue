@@ -368,46 +368,51 @@
 
         <!-- Sliding tackle modal -->
         <Transition enter-active-class="transition-opacity duration-200" enter-from-class="opacity-0" leave-active-class="transition-opacity duration-200" leave-to-class="opacity-0">
-            <div v-if="slidingModalOpen" class="fixed inset-0 z-50 bg-white flex flex-col">
-                <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 shrink-0">
-                    <h3 class="text-base font-bold text-slate-900">Why sliding tackles are banned</h3>
-                    <button class="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" @click="slidingModalOpen = false" aria-label="Close">
-                        <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
-                    </button>
-                </div>
-                <div class="overflow-y-auto flex-1">
-                    <div class="max-w-2xl mx-auto px-5 py-4 flex flex-col gap-4 text-slate-700">
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Why the slide tackle itself is the foul</p>
-                            <p class="text-sm">
-                                In recreational leagues that prohibit slide tackling, the rule exists purely as a safety measure — over-35 players are more susceptible to injury, and slide tackles carry a high risk of leg and knee contact. The league has pre-determined that the action itself is dangerous, so referees don't need to judge whether it was dangerous in the moment. The whistle blows the
-                                instant a player goes to ground in a tackling motion.
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Why contact doesn't matter</p>
-                            <p class="text-sm">Under the Laws of the Game (FIFA), a player can be penalized for <em>attempting</em> a foul, not just completing one. The slide tackle ban follows the same logic — the attempt is enough. The opponent doesn't need to be tripped, hurt, or even inconvenienced.</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Why it's a direct free kick</p>
-                            <p class="text-sm">An indirect free kick covers technical offenses (offside, goalkeeper backpass). A direct free kick is awarded for physical fouls and prohibited actions against an opponent. A slide tackle ban falls into that category.</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Why it becomes a penalty kick inside the box</p>
-                            <p class="text-sm">Any offense that would be a direct free kick outside the box is automatically upgraded to a penalty kick when committed by a defending player inside their own area.</p>
-                        </div>
-                        <div>
-                            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Why a card may also be issued</p>
-                            <p class="text-sm">A foul and a card are two separate decisions. The foul stops play and sets the restart. The card is the referee's disciplinary response — was the tackle careless (no card), reckless (yellow), or using excessive force (red)? A clearly accidental slide might just be a free kick, while a late or two-footed challenge could earn a yellow or red on top.</p>
+            <div v-if="slidingModalOpen" class="fixed inset-0 z-60 flex items-center justify-center" @click.self="slidingModalOpen = false">
+                <div class="absolute inset-0 bg-black/50" @click="slidingModalOpen = false" />
+                <div class="relative bg-white rounded-xl shadow-xl z-10 flex flex-col" style="width: 90vw; height: 90vh">
+                    <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 shrink-0 rounded-t-xl">
+                        <h3 class="text-base font-bold text-slate-900">Why sliding tackles are banned</h3>
+                        <button class="text-slate-400 hover:text-slate-600 transition-colors cursor-pointer" @click="slidingModalOpen = false" aria-label="Close">
+                            <svg class="size-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                        </button>
+                    </div>
+                    <div class="overflow-y-auto flex-1 px-5 py-4">
+                        <div class="flex flex-col gap-4 text-slate-700">
+                            <div>
+                                <p class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-1">Why the slide tackle itself is the foul</p>
+                                <p class="text-sm">
+                                    In recreational leagues that prohibit slide tackling, the rule exists purely as a safety measure — over-35 players are more susceptible to injury, and slide tackles carry a high risk of leg and knee contact. The league has pre-determined that the action itself is dangerous, so referees don't need to judge whether it was dangerous in the moment. The whistle blows
+                                    the instant a player goes to ground in a tackling motion.
+                                </p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-1">Why contact doesn't matter</p>
+                                <p class="text-sm">Under the Laws of the Game (FIFA), a player can be penalized for <em>attempting</em> a foul, not just completing one. The slide tackle ban follows the same logic — the attempt is enough. The opponent doesn't need to be tripped, hurt, or even inconvenienced.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-1">Why it's a direct free kick</p>
+                                <p class="text-sm">An indirect free kick covers technical offenses (offside, goalkeeper backpass). A direct free kick is awarded for physical fouls and prohibited actions against an opponent. A slide tackle ban falls into that category.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-1">Why it becomes a penalty kick inside the box</p>
+                                <p class="text-sm">Any offense that would be a direct free kick outside the box is automatically upgraded to a penalty kick when committed by a defending player inside their own area.</p>
+                            </div>
+                            <div>
+                                <p class="text-xs font-semibold text-slate-900 uppercase tracking-wider mb-1">Why a card may also be issued</p>
+                                <p class="text-sm">
+                                    A foul and a card are two separate decisions. The foul stops play and sets the restart. The card is the referee's disciplinary response — was the tackle careless (no card), reckless (yellow), or using excessive force (red)? A clearly accidental slide might just be a free kick, while a late or two-footed challenge could earn a yellow or red on top.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </Transition>
 
-        <!-- Scroll to top -->
+        <!-- Scroll to top (hidden when modal is open) -->
         <Transition enter-active-class="transition-opacity duration-200" enter-from-class="opacity-0" leave-active-class="transition-opacity duration-200" leave-to-class="opacity-0">
-            <button v-if="showScrollTop" class="fixed bottom-6 right-6 size-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer z-50" @click="scrollToTop" aria-label="Scroll to top">
+            <button v-if="showScrollTop && !slidingModalOpen" class="fixed bottom-6 right-6 size-14 rounded-full bg-blue-600 text-white shadow-lg flex items-center justify-center hover:bg-blue-700 transition-colors cursor-pointer z-50" @click="scrollToTop" aria-label="Scroll to top">
                 <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m18 15-6-6-6 6" />
                 </svg>
@@ -417,10 +422,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import { RouterLink } from "vue-router";
 
 const slidingModalOpen = ref(false);
+watch(slidingModalOpen, (open) => {
+    document.body.style.overflow = open ? "hidden" : "";
+});
 
 const showScrollTop = ref(false);
 function onScroll() {

@@ -65,13 +65,9 @@
                 <!-- Schedule -->
                 <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                        <button class="flex items-center justify-between w-full cursor-pointer" @click="scheduleOpen = !scheduleOpen">
-                            <h2 class="text-base font-bold text-slate-900">Schedule</h2>
-                            <ChevronIcon :open="scheduleOpen" />
-                        </button>
+                        <h2 class="text-base font-bold text-slate-900">Schedule</h2>
                     </div>
 
-                    <template v-if="scheduleOpen">
                         <!-- Team filter -->
                         <div class="px-4 py-3 border-b border-slate-300 bg-slate-50 flex gap-2 items-center">
                             <div class="relative flex-1" v-click-outside="() => (filterOpen = false)">
@@ -117,19 +113,14 @@
                                 </div>
                             </div>
                         </div>
-                    </template>
                 </section>
 
                 <!-- Standings -->
                 <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                        <button class="flex items-center justify-between w-full cursor-pointer" @click="standingsOpen = !standingsOpen">
-                            <h2 class="text-base font-bold text-slate-900">Standings</h2>
-                            <ChevronIcon :open="standingsOpen" />
-                        </button>
+                        <h2 class="text-base font-bold text-slate-900">Standings</h2>
                     </div>
 
-                    <template v-if="standingsOpen">
                         <!-- Desktop table -->
                         <div class="hidden sm:block overflow-x-auto">
                             <table class="w-full text-sm">
@@ -177,19 +168,14 @@
                                 </tbody>
                             </table>
                         </div>
-                    </template>
                 </section>
 
                 <!-- Top Scorers -->
                 <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
-                        <button class="flex items-center justify-between w-full cursor-pointer" @click="scorersOpen = !scorersOpen">
-                            <h2 class="text-base font-bold text-slate-900">Top Scorers</h2>
-                            <ChevronIcon :open="scorersOpen" />
-                        </button>
+                        <h2 class="text-base font-bold text-slate-900">Top Scorers</h2>
                     </div>
 
-                    <template v-if="scorersOpen">
                         <div v-if="store.filteredScorers.length === 0" class="px-4 py-6 text-center text-sm text-slate-500">No scorer data available.</div>
                         <template v-for="divGroup in scorersByDivision" :key="divGroup.division_id">
                             <div v-if="scorersByDivision.length > 1" class="px-4 py-2 bg-slate-100 border-b border-slate-200">
@@ -203,7 +189,6 @@
                                 </div>
                             </div>
                         </template>
-                    </template>
                 </section>
             </template>
         </div>
@@ -234,7 +219,6 @@ const vClickOutside = {
 };
 import { useLeagueStore } from "@/stores/league";
 import { useFieldLinks } from "@/composables/useFieldLinks";
-import ChevronIcon from "@/components/ChevronIcon.vue";
 import TrophyIcon from "@/components/TrophyIcon.vue";
 import type { Game } from "@/types/league";
 
@@ -243,9 +227,6 @@ const { getFieldUrl } = useFieldLinks();
 
 onMounted(() => store.load());
 
-const scheduleOpen = ref(true);
-const standingsOpen = ref(true);
-const scorersOpen = ref(true);
 const filterOpen = ref(false);
 
 const showScrollTop = ref(false);
