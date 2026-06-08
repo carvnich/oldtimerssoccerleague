@@ -4,7 +4,7 @@ import { useCookie } from "@/composables/useCookie";
 import type { Game, Standing, Scorer } from "@/types/league";
 
 const SEASON_YEAR = "2026";
-const API_BASE = "https://oldtimerssoccerleague.com/otsl_api.php";
+const API_BASE = "/api/otsl_api.php";
 
 const CUP_DIVISION_MAP: Record<string, string> = {
   A: "SP. CUP A",
