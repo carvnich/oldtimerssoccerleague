@@ -25,6 +25,5 @@ export function useFieldLinks() {
   function getFieldUrl(fieldName: string): string | null {
     return FIELD_LINKS[fieldName] ?? null;
   }
-
   return { getFieldUrl };
 }
