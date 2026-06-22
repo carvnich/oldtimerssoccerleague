@@ -17,39 +17,57 @@
             </div>
         </header>
 
+        <!-- Sticky filter bar -->
+        <div class="sticky top-0 z-30 bg-slate-100 border-b border-slate-300 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 pt-3 pb-0 flex flex-col gap-2">
+                <!-- Division toggle -->
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button
+                        v-for="option in store.divisionOptions"
+                        :key="option.value"
+                        class="px-4 py-1.5 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
+                        :class="store.division === option.value ? 'bg-blue-600 border-blue-600 text-white shadow-sm' : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'"
+                        @click="
+                            store.division = option.value;
+                            store.selectedTeam = '';
+                        "
+                    >
+                        {{ option.label }}
+                    </button>
+                </div>
+
+                <!-- Season type toggle -->
+                <div class="flex flex-wrap justify-center gap-2">
+                    <button
+                        v-for="option in store.seasonOptions"
+                        :key="option.value"
+                        class="px-4 py-1.5 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
+                        :class="store.seasonType === option.value ? 'bg-blue-600 border-blue-600 text-white shadow-sm' : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'"
+                        @click="
+                            store.seasonType = option.value;
+                            store.selectedTeam = '';
+                        "
+                    >
+                        {{ option.label }}
+                    </button>
+                </div>
+
+                <!-- Tab bar -->
+                <div class="flex justify-center gap-0 border-t border-slate-200 mt-1">
+                    <button
+                        v-for="tab in store.tabOptions"
+                        :key="tab.value"
+                        class="px-6 py-2.5 text-sm font-medium transition-colors cursor-pointer border-b-2 -mb-px"
+                        :class="store.activeTab === tab.value ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-800 hover:border-slate-300'"
+                        @click="store.activeTab = tab.value"
+                    >
+                        {{ tab.label }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-6">
-            <!-- Division toggle -->
-            <div class="flex flex-wrap justify-center gap-2">
-                <button
-                    v-for="option in store.divisionOptions"
-                    :key="option.value"
-                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
-                    :class="store.division === option.value ? 'bg-blue-600 border-blue-600 text-white shadow-sm' : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'"
-                    @click="
-                        store.division = option.value;
-                        store.selectedTeam = '';
-                    "
-                >
-                    {{ option.label }}
-                </button>
-            </div>
-
-            <!-- Season type toggle -->
-            <div class="flex flex-wrap justify-center gap-2">
-                <button
-                    v-for="option in store.seasonOptions"
-                    :key="option.value"
-                    class="px-4 py-2 rounded-lg text-sm font-medium border transition-colors cursor-pointer"
-                    :class="store.seasonType === option.value ? 'bg-blue-600 border-blue-600 text-white shadow-sm' : 'bg-white border-slate-300 text-slate-600 hover:border-slate-400 hover:text-slate-900 hover:bg-slate-50'"
-                    @click="
-                        store.seasonType = option.value;
-                        store.selectedTeam = '';
-                    "
-                >
-                    {{ option.label }}
-                </button>
-            </div>
-
             <!-- Loading -->
             <div v-if="store.pending" class="flex justify-center py-20">
                 <svg class="size-10 animate-spin text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,7 +81,7 @@
 
             <template v-else>
                 <!-- Schedule -->
-                <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
+                <section v-if="store.activeTab === 'schedule'" class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
                         <h2 class="text-base font-bold text-slate-900">Schedule</h2>
                     </div>
@@ -116,7 +134,7 @@
                 </section>
 
                 <!-- Standings -->
-                <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
+                <section v-if="store.activeTab === 'standings'" class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
                         <h2 class="text-base font-bold text-slate-900">Standings</h2>
                     </div>
@@ -171,7 +189,7 @@
                 </section>
 
                 <!-- Top Scorers -->
-                <section class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
+                <section v-if="store.activeTab === 'scorers'" class="rounded-xl overflow-hidden border border-slate-300 bg-white shadow-sm">
                     <div class="px-4 py-3 border-b border-slate-300 bg-slate-50">
                         <h2 class="text-base font-bold text-slate-900">Top Scorers</h2>
                     </div>

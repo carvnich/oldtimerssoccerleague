@@ -24,6 +24,7 @@ export const useLeagueStore = defineStore("league", () => {
   const division = useCookie("otsl-division", "A");
   const seasonType = useCookie("otsl-season-type", "regular");
   const selectedTeam = useCookie("otsl-selected-team", "");
+  const activeTab = useCookie("otsl-active-tab", "schedule");
 
   const divisionOptions = [
     { label: "Division A", value: "A" },
@@ -113,12 +114,20 @@ export const useLeagueStore = defineStore("league", () => {
     return scorersData.value.filter((s) => s.division_id === `${division.value} DIVISION`);
   });
 
+  const tabOptions = [
+    { label: "Schedule", value: "schedule" },
+    { label: "Standings", value: "standings" },
+    { label: "Scorers", value: "scorers" },
+  ];
+
   return {
     division,
     seasonType,
     selectedTeam,
+    activeTab,
     divisionOptions,
     seasonOptions,
+    tabOptions,
     pending,
     error,
     load,
